@@ -1,4 +1,5 @@
 from src.boxes.Treebank import Treebank
+from src.metrics.TokenCount import TokenCount
 import os
 
 
@@ -12,11 +13,10 @@ def main():
     mandarin_path = os.path.join(
         os.path.dirname(__file__), 'corpus/madarin.conllu')
     mandarin = Treebank.from_file(mandarin_path, 'cmn')
-    print(eng)
-    print(deu)
-    print(hun)
-    print(mandarin)
-    print(eng.sentences[0].to_pandas())
+
+    tokenCount = TokenCount(include_punct=False)
+    tokenCountResult = tokenCount.for_parellel_treebanks(
+        [deu, hun, mandarin], reference_treebank=eng)
 
 
 if __name__ == '__main__':
