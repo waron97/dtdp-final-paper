@@ -48,7 +48,6 @@ class Row:
             "VerbForm",
             "Voice",
             "SpaceAfter",
-            "VerbForm",
             "PronType",
             "Number[psor]",
             "Person[psor]",
