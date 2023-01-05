@@ -54,8 +54,8 @@ class ConnluParser:
     @classmethod
     def __update_sentence(cls, sentence: Sentence, parsed_line: ParsedLine):
         if parsed_line.type == LineType.comment:
-            key = parsed_line.data["key"]
-            value = parsed_line.data["value"]
+            key = parsed_line.data["key"].strip()
+            value = parsed_line.data["value"].strip()
             if key == "sent_id":
                 sentence.sent_id = value
             elif key == "text":
