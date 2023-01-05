@@ -28,6 +28,8 @@ class ConnluParser:
                 if not regex_patterns.ANY_NON_WHITESPACE.match(line):
                     # Empty line encountered, meaning sentence is over
                     if sentence != None and len(sentence.rows) > 0:
+                        if sentence.lang_code == "eng":
+                            sentence.sent_id_eng = sentence.sent_id
                         sentences.append(sentence)
                     sentence = Sentence(rows=[], sent_id=None, text=None,
                                         lang_code=lang_code, sent_id_eng=None, text_eng=None)

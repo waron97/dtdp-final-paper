@@ -61,7 +61,7 @@ class Metric(ABC):
         if reference_treebank:
             reference_results = self.for_treebank(reference_treebank)
             reference_values = {
-                result.sent_id: result.value for result in reference_results}
+                result.sent_id_eng: result.value for result in reference_results}
         final = MetricParallelOutput(
             reference=reference_results, treebanks={}, treebank_averages={})
         if reference_values:
