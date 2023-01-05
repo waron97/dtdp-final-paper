@@ -1,8 +1,11 @@
 from ..boxes.Treebank import Treebank
 from ..boxes.Sentence import Sentence
 from dataclasses import dataclass
-from typing import List, Mapping
+from typing import List, Mapping, TypedDict, Callable
 from abc import ABC, abstractmethod
+import pandas as pd
+import numpy as np
+from ..util.core import find
 
 
 @dataclass
@@ -21,9 +24,81 @@ class MetricParallelOutput:
     treebanks: Mapping[str, List[Result]]  # Results for other treebanks
     # Average for each treebank, as identified by language code
     treebank_averages: Mapping[str, float]
+    reference_lang_code: str = None
 
     def __str__(self) -> str:
         return f"MetricParallelOutput - average values {self.treebank_averages} - reference {bool(self.reference)} - {len(self.treebanks)} treebanks"
+
+    def sentences_to_pandas(self) -> pd.DataFrame:
+        pass
+
+    def treebanks_to_pandas(self) -> pd.DataFrame:
+        class Column(TypedDict):
+            key: str
+            getter: Callable[[str], float]
+
+        def __build_finder(lang_code: str, value_field: str):
+            def finder(sent_id: str):
+                item = find(lambda r: r.sent_id_eng == sent_id,
+                            self.treebanks[lang_code])
+                if value_field == "value":
+                    return item.value
+                elif value_field == "reference_value":
+                    return item.offset_from_reference
+            return finder
+
+        if self.reference_lang_code:
+            row_labels = list(map(lambda r: r.sent_id_eng, self.reference))
+            columns: List[Column] = [
+                {
+                    "key": f"{self.reference_lang_code} (reference)",
+                    "getter": lambda sid: find(lambda r: r.sent_id == sid, self.reference).value
+                },
+                *[
+                    {
+                        "key": f"{lang_code}",
+                        "getter": __build_finder(lang_code, "value")
+                    } for lang_code in self.treebanks.keys()
+                ],
+                *[
+                    {
+                        "key": f"{lang_code} (offset from reference)",
+                        "getter": __build_finder(lang_code, "reference_value")
+                    } for lang_code in self.treebanks.keys()
+                ]
+            ]
+            arr = np.zeros((len(row_labels), len(columns)), dtype=np.float32)
+            for i, sent_id in enumerate(row_labels):
+                for j, column in enumerate(columns):
+                    try:
+                        value = column["getter"](sent_id)
+                        arr[i, j] = value
+                    except AttributeError:
+                        print("Item not found", sent_id, column["key"])
+
+            return pd.DataFrame(arr, index=row_labels, columns=list(map(lambda c: c["key"], columns)))
+
+        else:
+            columns: List[Column] = [
+                {
+                    "key": f"{lang_code}",
+                    "getter": __build_finder(lang_code, "value"),
+                } for lang_code in self.treebanks.keys()
+            ]
+            sample_tb = list(self.treebanks.values())[0]
+            row_labels = list(map(lambda r: r.sent_id_eng,
+                              sample_tb))
+            col_labels = list(map(lambda c: c["key"], columns))
+            arr = np.zeros((len(row_labels), len(columns)), dtype=np.float32)
+            for i, sent_id in enumerate(row_labels):
+                for j, column in enumerate(columns):
+                    try:
+                        value = column["getter"](sent_id)
+                        arr[i, j] = value
+                    except AttributeError:
+                        print("Item not found", sent_id, column["key"])
+            df = pd.DataFrame(arr, index=row_labels, columns=col_labels)
+            return df
 
 
 class Metric(ABC):
@@ -65,6 +140,7 @@ class Metric(ABC):
         final = MetricParallelOutput(
             reference=reference_results, treebanks={}, treebank_averages={})
         if reference_values:
+            final.reference_lang_code = reference_treebank.lang_code
             final.treebank_averages[reference_treebank.lang_code] = sum(
                 reference_values.values()) / len(reference_values.values())
         for treebank in treebanks:

@@ -7,8 +7,8 @@ import pandas as pd
 @dataclass
 class Sentence:
     rows: List[Row]
-    sent_id: int
-    sent_id_eng: int
+    sent_id: str
+    sent_id_eng: str
     lang_code: str
     text: str
     text_eng: str
