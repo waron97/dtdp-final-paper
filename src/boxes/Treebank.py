@@ -13,6 +13,7 @@ class Treebank:
         return f"Treebank(lang_code={self.lang_code}, sentences=[{len(self.sentences)} sentences)])"
 
     @classmethod
-    def from_file(cls, path, lang_code=None):
-        sentences = ConnluParser.parse(path, lang_code)
+    def from_file(cls, path, lang_code=None, ignore_compound_indexes=False):
+        sentences = ConnluParser.parse(
+            path, lang_code, ignore_compound_indexes=ignore_compound_indexes)
         return cls(sentences=sentences, lang_code=lang_code)

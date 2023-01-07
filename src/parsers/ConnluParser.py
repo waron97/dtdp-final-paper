@@ -19,7 +19,7 @@ class ParsedLine:
 
 class ConnluParser:
     @classmethod
-    def parse(cls, path: str, lang_code) -> List[Sentence]:
+    def parse(cls, path: str, lang_code, ignore_compound_indexes=False) -> List[Sentence]:
         sentences: List[Sentence] = []
         sentence = Sentence(rows=[], sent_id=None, text=None,
                             lang_code=lang_code, sent_id_eng=None, text_eng=None)
@@ -35,7 +35,8 @@ class ConnluParser:
                                         lang_code=lang_code, sent_id_eng=None, text_eng=None)
                     continue
                 parsed_line = cls.__parse_line(line)
-                cls.__update_sentence(sentence, parsed_line)
+                cls.__update_sentence(
+                    sentence, parsed_line, ignore_compound_indexes=ignore_compound_indexes)
         return sentences
 
     @classmethod
@@ -54,7 +55,7 @@ class ConnluParser:
             raise ValueError("Line is not a comment or content line")
 
     @classmethod
-    def __update_sentence(cls, sentence: Sentence, parsed_line: ParsedLine):
+    def __update_sentence(cls, sentence: Sentence, parsed_line: ParsedLine, ignore_compound_indexes=False):
         if parsed_line.type == LineType.comment:
             key = parsed_line.data["key"].strip()
             value = parsed_line.data["value"].strip()
@@ -67,4 +68,8 @@ class ConnluParser:
             elif key == "text_eng":
                 sentence.text_eng = value
         elif parsed_line.type == LineType.content:
+            has_compound_index = regex_patterns.COMPOUND_INDEX.match(
+                parsed_line.data["row"].index)
+            if ignore_compound_indexes and has_compound_index:
+                return
             sentence.rows.append(parsed_line.data["row"])
