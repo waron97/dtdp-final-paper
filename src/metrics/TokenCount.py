@@ -10,6 +10,6 @@ class TokenCount(Metric):
 
     def for_sentence(self, sentence):
         if self.include_punct:
-            return len(sentence.words)
+            return len(sentence.rows)
         filtered = [row for row in sentence.rows if row.pos != 'PUNCT']
         return len(filtered)
