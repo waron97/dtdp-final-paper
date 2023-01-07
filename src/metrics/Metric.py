@@ -29,10 +29,7 @@ class MetricParallelOutput:
     def __str__(self) -> str:
         return f"MetricParallelOutput - average values {self.treebank_averages} - reference {bool(self.reference)} - {len(self.treebanks)} treebanks"
 
-    def sentences_to_pandas(self) -> pd.DataFrame:
-        pass
-
-    def treebanks_to_pandas(self) -> pd.DataFrame:
+    def to_pandas(self) -> pd.DataFrame:
         class Column(TypedDict):
             key: str
             getter: Callable[[str], float]
