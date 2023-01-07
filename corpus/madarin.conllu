@@ -312,8 +312,8 @@
 12	多	多	ADJ	JJ	_	10	advmod	_	SpaceAfter=No
 13	。	。	PUNCT	.	_	10	punct	_	SpaceAfter=No
 
-# text_eng = The number of students who were late for school was much smaller than I had expected.
-# sent_id_eng = 21587
+# text_eng = One day, the police raided a whole group of prostitutes, and the girl was among them.
+# sent_id_eng = 67163
 # text = 有一天，警方突击搜捕了一个娼妓集团，而她正是被捕的人的其中一个。
 # sent_id = 433704
 # lang_code = cmn
