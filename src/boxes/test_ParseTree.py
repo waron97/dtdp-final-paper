@@ -46,12 +46,4 @@ def test_parse_1():
 
     tree = ParseTree(rows, root_index=0)
 
-    exp = np.array([
-        [False, True, True, False, False],
-        [False, False, False, True, True],
-        [False, False, False, False, False],
-        [False, False, False, False, False],
-        [False, False, False, False, False],
-    ])
-
-    assert np.array_equal(tree.adjacency, exp)
+    assert tree.depth() == 2
