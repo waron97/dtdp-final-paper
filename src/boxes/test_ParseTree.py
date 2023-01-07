@@ -30,7 +30,7 @@ def test_parse_1():
     assert np.array_equal(tree.adjacency, exp)
 
 
-def test_parse_1():
+def test_parse_2():
     rows = [
         Row(index=1, head_index=0, token="",
             lemma="", pos="", rel_type="", attrs={}),

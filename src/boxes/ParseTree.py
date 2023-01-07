@@ -1,5 +1,5 @@
 from .Row import Row
-from typing import List
+from typing import List, Callable
 import numpy as np
 
 
@@ -23,5 +23,33 @@ class ParseTree:
                     arr[i, j] = True
         self.adjacency = arr
 
-    def depth(self):
-        pass
+    def depth(self) -> int:
+        max_depth = 0
+
+        def on_visit(row: Row, index: int, depth: int):
+            nonlocal max_depth
+            if depth > max_depth:
+                max_depth = depth
+
+        self.__traverse(on_visit=on_visit)
+        return max_depth
+
+    def __traverse(self, depth: int = 0, start_index: int = None, on_visit: Callable[[Row, int, int], None] = None):
+        if start_index is None:
+            start_index = self.root_index
+
+        if on_visit is not None:
+            on_visit(self.rows[start_index], start_index, depth)
+
+        children = self.__get_children_indexes(start_index)
+
+        for child_index in children:
+            self.__traverse(depth=depth + 1,
+                            start_index=child_index, on_visit=on_visit)
+
+    def __get_children_indexes(self, index: int) -> List[int]:
+        children_indexes = []
+        for i in range(len(self.adjacency[index])):
+            if self.adjacency[index][i]:
+                children_indexes.append(i)
+        return children_indexes
