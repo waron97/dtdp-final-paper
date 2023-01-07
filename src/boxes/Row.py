@@ -8,7 +8,7 @@ class Row:
     token: str
     lemma: str
     pos: str
-    head_index: int
+    head_index: str
     rel_type: str
     attrs: Mapping[str, str]
 
@@ -20,7 +20,7 @@ class Row:
         lemma = split[2]
         pos = split[3]
         attrs = cls.__parse_attrs(split[5])
-        head_index = int(split[6]) if split[6] != "_" else None
+        head_index = split[6] if split[6] != "_" else None
         rel_type = split[7]
 
         return cls(index=index, token=token, lemma=lemma, pos=pos, head_index=head_index, rel_type=rel_type, attrs=attrs)
