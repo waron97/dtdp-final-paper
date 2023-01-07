@@ -131,19 +131,24 @@ class Metric(ABC):
         reference_results = None
         reference_values = None
         if reference_treebank:
+            # If reference is provided, compute values for it
             reference_results = self.for_treebank(reference_treebank)
             reference_values = {
                 result.sent_id_eng: result.value for result in reference_results}
         final = MetricParallelOutput(
             reference=reference_results, treebanks={}, treebank_averages={})
         if reference_values:
+            # If reference is provided, record its average value in the result
             final.reference_lang_code = reference_treebank.lang_code
             final.treebank_averages[reference_treebank.lang_code] = sum(
                 reference_values.values()) / len(reference_values.values())
         for treebank in treebanks:
+            # Compute metric values for each treebank
             treebank_result = self.for_treebank(treebank)
             treebank_values = [result.value for result in treebank_result]
             if reference_values:
+                # If reference is provided, compute offset from reference for each
+                # result in each treebank
                 for result in treebank_result:
                     result.reference_value = reference_values[result.sent_id_eng]
                     result.offset_from_reference = result.value - \
