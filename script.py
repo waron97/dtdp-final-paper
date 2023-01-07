@@ -1,5 +1,6 @@
 from src.boxes.Treebank import Treebank
 from src.metrics.TokenCount import TokenCount
+from src.metrics.TreeDepth import TreeDepth
 import os
 
 
@@ -19,6 +20,12 @@ def main():
     tokenCountResult = tokenCount.for_parellel_treebanks(
         [deu, hun, mandarin], reference_treebank=eng)
     print(tokenCountResult.to_pandas())
+
+    # parse tree depth
+    treeDepth = TreeDepth()
+    treeDepthResult = treeDepth.for_parellel_treebanks(
+        [deu, hun, mandarin], reference_treebank=eng)
+    print(treeDepthResult.to_pandas())
 
 
 if __name__ == '__main__':
