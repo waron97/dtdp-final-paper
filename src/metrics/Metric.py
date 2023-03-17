@@ -19,6 +19,14 @@ class Result:
 
 
 @dataclass
+class TreebankResult:
+    items: List[Result]
+
+    def mean(self) -> float:
+        return np.mean(list(map(lambda r: r.value, self.items)))
+
+
+@dataclass
 class MetricParallelOutput:
     reference: List[Result]  # Result for reference treebank
     treebanks: Mapping[str, List[Result]]  # Results for other treebanks
@@ -103,7 +111,7 @@ class Metric(ABC):
     def for_sentence(self, sentence: Sentence) -> float:
         pass
 
-    def for_treebank(self, treebank: Treebank) -> List[Result]:
+    def for_treebank(self, treebank: Treebank) -> TreebankResult:
         results = []
         for sentence in treebank.sentences:
             value = self.for_sentence(sentence)
@@ -113,7 +121,7 @@ class Metric(ABC):
                 sent_id_eng=sentence.sent_id_eng,
                 value=value
             ))
-        return results
+        return TreebankResult(items=results)
 
     def for_parellel_treebanks(self, treebanks: List[Treebank], reference_treebank: Treebank = None) -> MetricParallelOutput:
         """
@@ -132,7 +140,7 @@ class Metric(ABC):
         reference_values = None
         if reference_treebank:
             # If reference is provided, compute values for it
-            reference_results = self.for_treebank(reference_treebank)
+            reference_results = self.for_treebank(reference_treebank).items
             reference_values = {
                 result.sent_id_eng: result.value for result in reference_results}
         final = MetricParallelOutput(
@@ -144,7 +152,7 @@ class Metric(ABC):
                 reference_values.values()) / len(reference_values.values())
         for treebank in treebanks:
             # Compute metric values for each treebank
-            treebank_result = self.for_treebank(treebank)
+            treebank_result = self.for_treebank(treebank).items
             treebank_values = [result.value for result in treebank_result]
             if reference_values:
                 # If reference is provided, compute offset from reference for each
