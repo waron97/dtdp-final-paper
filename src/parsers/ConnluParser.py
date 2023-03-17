@@ -48,8 +48,8 @@ class ConnluParser:
                     comment, 1)
                 return ParsedLine(type=LineType.comment, data={"key": key, "value": value})
             except Exception as e:
-                print("comment", comment)
-                print("ERROR", e)
+                # malformed comment line
+                return
         elif regex_patterns.CONTENT_LINE.match(line):
             row = Row.from_line(line)
             return ParsedLine(type=LineType.content, data={"row": row})
@@ -58,6 +58,8 @@ class ConnluParser:
 
     @classmethod
     def __update_sentence(cls, sentence: Sentence, parsed_line: ParsedLine, ignore_compound_indexes=False):
+        if not parsed_line:
+            return
         if parsed_line.type == LineType.comment:
             key = parsed_line.data["key"].strip()
             value = parsed_line.data["value"].strip()
