@@ -33,6 +33,7 @@ class MetricParallelOutput:
     # Average for each treebank, as identified by language code
     treebank_averages: Mapping[str, float]
     reference_lang_code: str = None
+    id_field: str = "sent_id_eng"
 
     def __str__(self) -> str:
         return f"MetricParallelOutput - average values {self.treebank_averages} - reference {bool(self.reference)} - {len(self.treebanks)} treebanks"
@@ -123,7 +124,7 @@ class Metric(ABC):
             ))
         return TreebankResult(items=results)
 
-    def for_parellel_treebanks(self, treebanks: List[Treebank], reference_treebank: Treebank = None) -> MetricParallelOutput:
+    def for_parellel_treebanks(self, treebanks: List[Treebank], reference_treebank: Treebank = None, id_field: str = "sent_id_eng") -> MetricParallelOutput:
         """
         Compute metric for multiple treebanks. Results are grouped by sentence id. If reference
         treebank is provided, results for the other treebank are also reported as the difference
@@ -144,7 +145,7 @@ class Metric(ABC):
             reference_values = {
                 result.sent_id_eng: result.value for result in reference_results}
         final = MetricParallelOutput(
-            reference=reference_results, treebanks={}, treebank_averages={})
+            reference=reference_results, treebanks={}, treebank_averages={}, id_field=id_field)
         if reference_values:
             # If reference is provided, record its average value in the result
             final.reference_lang_code = reference_treebank.lang_code
