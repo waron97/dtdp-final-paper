@@ -4,6 +4,7 @@ from src.metrics.TreeDepth import TreeDepth
 from src.metrics.LengthLongestDepLink import LengthLongestDepLink
 from src.util import download_experiment_treebanks
 from src.constants.treebank_paths import WEB_TREEBANK_PATHS
+import pandas as pd
 
 
 def main():
@@ -15,28 +16,46 @@ def main():
     en_asl = Treebank.from_file(
         WEB_TREEBANK_PATHS['en_esl'], lang_code='en_esl', ignore_compound_indexes=True)
 
-    # Length of longest dependency link
-    lengthLongestDepLink = LengthLongestDepLink()
-    result_de = lengthLongestDepLink.for_treebank(de_gsd)
-    result_en = lengthLongestDepLink.for_treebank(en_asl)
+    en_atis = Treebank.from_file(
+        WEB_TREEBANK_PATHS['en_atis'], lang_code='en_atis', ignore_compound_indexes=True)
 
-    print("[de length of longest dependency link]", result_de.mean())
-    print("[en length of longest dependency link]", result_en.mean())
+    de_hdt_1 = Treebank.from_file(
+        WEB_TREEBANK_PATHS['de_hdt_1'], lang_code='de_hdt_1', ignore_compound_indexes=True)
 
-    # token count
-    tokenCount = TokenCount(include_punct=False)
-    result_de = tokenCount.for_treebank(de_gsd)
-    result_en = tokenCount.for_treebank(en_asl)
+    de_hdt_2 = Treebank.from_file(
+        WEB_TREEBANK_PATHS['de_hdt_2'], lang_code='de_hdt_2', ignore_compound_indexes=True)
 
-    print("[de token count]", result_de.mean())
-    print("[en token count]", result_en.mean())
+    en_gum = Treebank.from_file(
+        WEB_TREEBANK_PATHS['en_gum'], lang_code='en_gum', ignore_compound_indexes=True)
 
-    # parse tree depth
-    treeDepth = TreeDepth()
-    result_de = treeDepth.for_treebank(de_gsd)
-    result_en = treeDepth.for_treebank(en_asl)
-    print("[de tree depth]", result_de.mean())
-    print("[en tree depth]", result_en.mean())
+    en_ewt = Treebank.from_file(
+        WEB_TREEBANK_PATHS['en_ewt'], lang_code='en_ewt', ignore_compound_indexes=True)
+
+    treebanks = [
+        ("en_esl", en_asl),
+        ("en_ewt", en_ewt),
+        ("en_gum", en_gum),
+        ("en_atis", en_atis),
+        ("de_gsd", de_gsd),
+        ("de_hdt_1", de_hdt_1),
+        ("de_hdt_2", de_hdt_2),
+    ]
+
+    metrics = [
+        ("token count", TokenCount(include_punct=False)),
+        ("tree depth", TreeDepth()),
+        ("lldl", LengthLongestDepLink())
+    ]
+
+    df = pd.DataFrame(index=[i[0] for i in treebanks],
+                      columns=[i[0] for i in metrics])
+
+    for treebank_name, treebank in treebanks:
+        for metric_name, metric in metrics:
+            df.loc[treebank_name, metric_name] = metric.for_treebank(
+                treebank).mean()
+
+    print(df)
 
 
 if __name__ == '__main__':
