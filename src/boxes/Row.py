@@ -61,7 +61,7 @@ class Row:
         split = attrs.split('|')
         for attr in split:
             try:
-                key, value = attr.split("=")
+                key, value = attr.split("=", 1)
                 parsed[key] = value
             except ValueError:
                 # malformed attr

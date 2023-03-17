@@ -42,12 +42,14 @@ class ConnluParser:
     @classmethod
     def __parse_line(cls, line: str) -> ParsedLine:
         if regex_patterns.COMMENT_LINE.match(line):
-            _, comment = line.split('#')
+            _, comment = line.split('#', 1)
             try:
-                key, value = regex_patterns.EQUAL_SIGN_SPLITTER.split(comment)
+                key, value = regex_patterns.EQUAL_SIGN_SPLITTER.split(
+                    comment, 1)
                 return ParsedLine(type=LineType.comment, data={"key": key, "value": value})
-            except:
+            except Exception as e:
                 print("comment", comment)
+                print("ERROR", e)
         elif regex_patterns.CONTENT_LINE.match(line):
             row = Row.from_line(line)
             return ParsedLine(type=LineType.content, data={"row": row})
