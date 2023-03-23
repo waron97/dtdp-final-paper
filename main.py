@@ -2,6 +2,11 @@ from src.boxes.Treebank import Treebank
 from src.metrics.TokenCount import TokenCount
 from src.metrics.TreeDepth import TreeDepth
 from src.metrics.LengthLongestDepLink import LengthLongestDepLink
+from src.metrics.NounVerbRatio import NounVerbRatio
+from src.metrics.ClausesPerSentence import ClausesPerSentence
+from src.metrics.XcompCcompCount import XCOMP_Count, CCOMP_Count
+from src.metrics.VerbsExplicitSubject import VerbsExplicitSubject
+from src.metrics.TypeTokenRatio import TypeTokenRatio
 from src.util import download_experiment_treebanks
 from src.constants.treebank_paths import WEB_TREEBANK_PATHS
 import pandas as pd
@@ -43,8 +48,15 @@ def main():
 
     metrics = [
         ("token count", TokenCount(include_punct=False)),
+        ("type token ratio", TypeTokenRatio()),
         ("tree depth", TreeDepth()),
-        ("lldl", LengthLongestDepLink())
+        ("lldl", LengthLongestDepLink()),
+        ("nv-ratio", NounVerbRatio()),
+        ("CxC", ClausesPerSentence()),
+        ("xcomp_c", XCOMP_Count()),
+        ("ccomp_c", CCOMP_Count()),
+        ("vesr", VerbsExplicitSubject())
+
     ]
 
     df = pd.DataFrame(index=[i[0] for i in treebanks],
