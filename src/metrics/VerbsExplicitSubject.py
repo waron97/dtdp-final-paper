@@ -12,6 +12,6 @@ class VerbsExplicitSubject(Metric):
             if "nsubj" in connecting or "csubj" in connecting:
                 with_explicity_subject += 1
         try:
-            return (with_explicity_subject / len(verbs)) * 100
+            return (with_explicity_subject / len(verbs))
         except ZeroDivisionError:
             return 0
