@@ -13,8 +13,14 @@ def download_treebank(filename, url):
 
 def download_experiment_treebanks():
     data_dir = os.path.join(os.getcwd(), "assets", "web_treebanks")
+    course_data_dir = os.path.join(os.getcwd(), "assets", "course_treebanks")
+
     try:
         os.makedirs(data_dir)
+    except:
+        pass
+    try:
+        os.makedirs(course_data_dir)
     except:
         pass
 
@@ -31,6 +37,17 @@ def download_experiment_treebanks():
         ("cmn_pud.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_Chinese-PUD/master/zh_pud-ud-test.conllu")
     ]
 
+    course_urls = [
+        ("deu.conllu", "https://raw.githubusercontent.com/iscl-dtdp/ParallelTreebank-FinalProject/main/deu.conllu?token=GHSAT0AAAAAAB5G54BWXQXH44Y54D2BZ3BUZA5WY7A"),
+        ("en.conllu", "https://raw.githubusercontent.com/iscl-dtdp/ParallelTreebank-FinalProject/main/en.conllu?token=GHSAT0AAAAAAB5G54BWF6Y6VYJHHWIMLG3KZA5WZ5A"),
+        ("hun.conllu", "https://raw.githubusercontent.com/iscl-dtdp/ParallelTreebank-FinalProject/main/hun.conllu?token=GHSAT0AAAAAAB5G54BX3NZS3XGE6LTUF5IEZA5W2CQ"),
+        ("mandarin.conllu", "https://raw.githubusercontent.com/iscl-dtdp/ParallelTreebank-FinalProject/main/madarin.conllu?token=GHSAT0AAAAAAB5G54BXMWYAHGANEJP42G2KZA5W2IQ"),
+    ]
+
     for filename, url in urls:
         p = os.path.join(data_dir, filename)
+        download_treebank(p, url)
+
+    for filename, url in course_urls:
+        p = os.path.join(course_data_dir, filename)
         download_treebank(p, url)

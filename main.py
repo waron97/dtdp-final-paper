@@ -63,12 +63,12 @@ def main():
     metrics = [
         ("token count", TokenCount(include_punct=False)),
         ("type token ratio", TypeTokenRatio()),
-        ("tree depth", TreeDepth()),
+        ("ptd", TreeDepth()),
         ("lldl", LengthLongestDepLink()),
-        ("nv-ratio", NounVerbRatio()),
-        ("CxC", ClausesPerSentence()),
-        ("xcomp_c", XCOMP_Count()),
-        ("ccomp_c", CCOMP_Count()),
+        ("n2v", NounVerbRatio()),
+        ("cxc", ClausesPerSentence()),
+        ("xcomp", XCOMP_Count()),
+        ("ccomp", CCOMP_Count()),
         ("vesr", VerbsExplicitSubject())
 
     ]
