@@ -21,14 +21,13 @@ def main():
     en_asl = Treebank.from_file(
         WEB_TREEBANK_PATHS['en_esl'], lang_code='en_esl', ignore_compound_indexes=True)
 
-    en_atis = Treebank.from_file(
-        WEB_TREEBANK_PATHS['en_atis'], lang_code='en_atis', ignore_compound_indexes=True)
-
     de_hdt_1 = Treebank.from_file(
         WEB_TREEBANK_PATHS['de_hdt_1'], lang_code='de_hdt_1', ignore_compound_indexes=True)
 
     de_hdt_2 = Treebank.from_file(
         WEB_TREEBANK_PATHS['de_hdt_2'], lang_code='de_hdt_2', ignore_compound_indexes=True)
+
+    de_hdt = Treebank.merge(de_hdt_1, de_hdt_2)
 
     en_gum = Treebank.from_file(
         WEB_TREEBANK_PATHS['en_gum'], lang_code='en_gum', ignore_compound_indexes=True)
@@ -36,15 +35,30 @@ def main():
     en_ewt = Treebank.from_file(
         WEB_TREEBANK_PATHS['en_ewt'], lang_code='en_ewt', ignore_compound_indexes=True)
 
+    hun_szeged = Treebank.from_file(
+        WEB_TREEBANK_PATHS["hun_szeged"], lang_code="hun_szeged", ignore_compound_indexes=True)
+    hun_szeged_1, hun_szeged_2 = Treebank.split(hun_szeged, 0.5)
+
+    cmn_gsd = Treebank.from_file(
+        WEB_TREEBANK_PATHS["cmn_gsd"], lang_code="cmn_gsd", ignore_compound_indexes=True)
+
+    cmn_pud = Treebank.from_file(
+        WEB_TREEBANK_PATHS["cmn_pud"], lang_code="cmn_pud", ignore_compound_indexes=True)
+
     treebanks = [
         ("en_esl", en_asl),
         ("en_ewt", en_ewt),
         ("en_gum", en_gum),
-        ("en_atis", en_atis),
         ("de_gsd", de_gsd),
-        ("de_hdt_1", de_hdt_1),
-        ("de_hdt_2", de_hdt_2),
+        ("de_hdt", de_hdt),
+        ("hun_szeged_1", hun_szeged_1),
+        ("hun_szeged_2", hun_szeged_2),
+        ("cmn_gsd", cmn_gsd),
+        ("cmn_pud", cmn_pud)
     ]
+
+    for name, bank in treebanks:
+        print(name, len(bank.sentences))
 
     metrics = [
         ("token count", TokenCount(include_punct=False)),

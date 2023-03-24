@@ -15,4 +15,7 @@ WEB_TREEBANK_PATHS = {
     "en_esl": os.path.join(os.getcwd(), 'assets/web_treebanks/en_esl.conllu'),
     "en_gum": os.path.join(os.getcwd(), 'assets/web_treebanks/en_gum.conllu'),
     "en_ewt": os.path.join(os.getcwd(), 'assets/web_treebanks/en_ewt.conllu'),
+    "hun_szeged": os.path.join(os.getcwd(), 'assets/web_treebanks/hun_szeged.conllu'),
+    "cmn_gsd": os.path.join(os.getcwd(), 'assets/web_treebanks/cmn_gsd.conllu'),
+    "cmn_pud": os.path.join(os.getcwd(), 'assets/web_treebanks/cmn_pud.conllu'),
 }

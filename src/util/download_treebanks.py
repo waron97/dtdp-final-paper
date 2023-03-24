@@ -25,7 +25,10 @@ def download_experiment_treebanks():
         ("de_hdt_1.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_German-HDT/master/de_hdt-ud-train-a-1.conllu"),
         ("de_hdt_2.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_German-HDT/master/de_hdt-ud-train-a-2.conllu"),
         ("en_gum.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_English-GUM/master/en_gum-ud-train.conllu"),
-        ("en_ewt.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/en_ewt-ud-train.conllu")
+        ("en_ewt.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_English-EWT/master/en_ewt-ud-train.conllu"),
+        ("hun_szeged.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_Hungarian-Szeged/master/hu_szeged-ud-train.conllu"),
+        ("cmn_gsd.conllu", "https://github.com/UniversalDependencies/UD_Chinese-GSD/raw/master/zh_gsd-ud-train.conllu"),
+        ("cmn_pud.conllu", "https://raw.githubusercontent.com/UniversalDependencies/UD_Chinese-PUD/master/zh_pud-ud-test.conllu")
     ]
 
     for filename, url in urls:
