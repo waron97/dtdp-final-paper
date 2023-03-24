@@ -51,7 +51,7 @@ def main():
         WEB_TREEBANK_PATHS["cmn_pud"], lang_code="cmn_pud", ignore_compound_indexes=True)
 
     treebanks = [
-        ("en_esl", en_asl),
+        # ("en_esl", en_asl),
         ("en_atis", en_atis),
         ("en_ewt", en_ewt),
         ("en_gum", en_gum),
