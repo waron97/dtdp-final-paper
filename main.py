@@ -97,7 +97,13 @@ def main():
 
     # ---------------------
 
-    write_to_latex(df, "paper/tables/results.tex", n_splits=2, transpose=False)
+    write_to_latex(
+        df,
+        "paper/tables/results.tex",
+        n_splits=2, transpose=False,
+        caption="Results on official UD treebanks. Top 3 values are highlighted for each metric.",
+        ref="tab:results"
+    )
 
 
 if __name__ == '__main__':

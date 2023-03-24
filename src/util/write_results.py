@@ -8,7 +8,8 @@ def _get_split_lines(
     row_labels: List[str] = [],
     col_labels: List[str] = [],
     main_row_label: str = "Treebank",
-    highlights: List[Tuple[str, str]] = []
+    highlights: List[Tuple[str, str]] = [],
+
 ):
     col_def = f"X{'c' * len(col_labels)}"
     lines = [f"\\begin{{tabularx}}{{\\textwidth}}{{{col_def}}}", "\\hline"]
@@ -33,7 +34,14 @@ def _get_split_lines(
     return lines
 
 
-def write_to_latex(df: pd.DataFrame, outfile: str, n_splits: int = 1, transpose: bool = False):
+def write_to_latex(
+    df: pd.DataFrame,
+    outfile: str,
+    n_splits: int = 1,
+    transpose: bool = False,
+    caption: str = "",
+    ref: str = ""
+):
     main_row_label = "Treebank"
 
     if transpose:
@@ -82,8 +90,9 @@ def write_to_latex(df: pd.DataFrame, outfile: str, n_splits: int = 1, transpose:
         if i != len(split_labels) - 1:
             lines.extend(["", "\\vspace{0.5cm}", ""])
 
-    lines.append("\\caption{{Results}}")
-    lines.append("\\label{{tab:results}}")
+    lines.append(
+        f"\\caption{{{caption}}}")
+    lines.append(f"\\label{{{ref}}}")
     lines.append("\\end{table*}")
 
     lines = "\n".join(lines).replace("_", "\\_")
