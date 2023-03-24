@@ -167,3 +167,8 @@ class Metric(ABC):
                 treebank_values) / len(treebank_values)
 
         return final
+
+
+class TreebankLevelMetric:
+    def compute(self, treebank: Treebank) -> float:
+        raise NotImplementedError()

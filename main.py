@@ -7,6 +7,8 @@ from src.metrics.ClausesPerSentence import ClausesPerSentence
 from src.metrics.XcompCcompCount import XCOMP_Count, CCOMP_Count
 from src.metrics.VerbsExplicitSubject import VerbsExplicitSubject
 from src.metrics.TypeTokenRatio import TypeTokenRatio
+from src.metrics.WordFormsPerLemma import WordFormsPerLemma
+from src.metrics.TriPosVariety import TriPosVariety
 from src.util import download_experiment_treebanks
 from src.constants.treebank_paths import WEB_TREEBANK_PATHS
 import pandas as pd
@@ -20,6 +22,9 @@ def main():
 
     en_asl = Treebank.from_file(
         WEB_TREEBANK_PATHS['en_esl'], lang_code='en_esl', ignore_compound_indexes=True)
+
+    en_atis = Treebank.from_file(
+        WEB_TREEBANK_PATHS['en_atis'], lang_code='en_atis', ignore_compound_indexes=True)
 
     de_hdt_1 = Treebank.from_file(
         WEB_TREEBANK_PATHS['de_hdt_1'], lang_code='de_hdt_1', ignore_compound_indexes=True)
@@ -47,6 +52,7 @@ def main():
 
     treebanks = [
         ("en_esl", en_asl),
+        ("en_atis", en_atis),
         ("en_ewt", en_ewt),
         ("en_gum", en_gum),
         ("de_gsd", de_gsd),
@@ -54,13 +60,13 @@ def main():
         ("hun_szeged_1", hun_szeged_1),
         ("hun_szeged_2", hun_szeged_2),
         ("cmn_gsd", cmn_gsd),
-        ("cmn_pud", cmn_pud)
+        ("cmn_pud", cmn_pud),
     ]
 
-    # for name, bank in treebanks:
-    #     print(name, len(bank.sentences))
+    for name, bank in treebanks:
+        print(name, len(bank.sentences))
 
-    metrics = [
+    sentence_level_metrics = [
         ("token count", TokenCount(include_punct=False)),
         ("type token ratio", TypeTokenRatio()),
         ("ptd", TreeDepth()),
@@ -69,17 +75,25 @@ def main():
         ("cxc", ClausesPerSentence()),
         ("xcomp", XCOMP_Count()),
         ("ccomp", CCOMP_Count()),
-        ("vesr", VerbsExplicitSubject())
+        ("vesr", VerbsExplicitSubject()),
+    ]
 
+    treebank_level_metrics = [
+        ("wfpl", WordFormsPerLemma()),
+        ("vsp", TriPosVariety())
     ]
 
     df = pd.DataFrame(index=[i[0] for i in treebanks],
-                      columns=[i[0] for i in metrics])
+                      columns=[i[0] for i in sentence_level_metrics] + [i[0] for i in treebank_level_metrics])
 
     for treebank_name, treebank in treebanks:
-        for metric_name, metric in metrics:
-            df.loc[treebank_name, metric_name] = metric.for_treebank(
+        for metric_name, metric in sentence_level_metrics:
+            result = metric.for_treebank(
                 treebank).mean()
+            df.loc[treebank_name, metric_name] = round(result, 4)
+        for metric_name, metric in treebank_level_metrics:
+            result = metric.compute(treebank)
+            df.loc[treebank_name, metric_name] = round(result, 4)
 
     print(df)
 
