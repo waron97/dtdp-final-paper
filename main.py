@@ -10,13 +10,11 @@ from src.metrics.TypeTokenRatio import TypeTokenRatio
 from src.metrics.WordFormsPerLemma import WordFormsPerLemma
 from src.metrics.TriPosVariety import TriPosVariety
 from src.util import download_experiment_treebanks, write_to_latex
-from src.constants.treebank_paths import WEB_TREEBANK_PATHS
+from src.constants.treebank_paths import WEB_TREEBANK_PATHS, COURSE_PARALLEL_TREEBANK_PATHS
 import pandas as pd
 
 
-def main():
-    download_experiment_treebanks()
-
+def web_treebanks():
     de_gsd = Treebank.from_file(
         WEB_TREEBANK_PATHS['de_gsd'], lang_code='de_gsd', ignore_compound_indexes=True)
 
@@ -104,6 +102,70 @@ def main():
         caption="Results on official UD treebanks. Top 3 values are highlighted for each metric.",
         ref="tab:results"
     )
+
+
+def course_treebanks():
+    hun = Treebank.from_file(
+        path=COURSE_PARALLEL_TREEBANK_PATHS["hun"], lang_code="hun", ignore_compound_indexes=True)
+    en = Treebank.from_file(
+        path=COURSE_PARALLEL_TREEBANK_PATHS["en"], lang_code="en", ignore_compound_indexes=True)
+    deu = Treebank.from_file(
+        path=COURSE_PARALLEL_TREEBANK_PATHS["deu"], lang_code="deu", ignore_compound_indexes=True)
+    mandarin = Treebank.from_file(
+        path=COURSE_PARALLEL_TREEBANK_PATHS["mandarin"], lang_code="mandarin", ignore_compound_indexes=True)
+
+    treebanks = [
+        ("hun", hun),
+        ("en", en),
+        ("deu", deu),
+        ("mandarin", mandarin),
+    ]
+
+    sentence_level_metrics = [
+        ("tc", TokenCount(include_punct=False)),
+        ("ttr", TypeTokenRatio()),
+        ("ptd", TreeDepth()),
+        ("lldl", LengthLongestDepLink()),
+        ("n2v", NounVerbRatio()),
+        ("cxc", ClausesPerSentence()),
+        ("xcomp", XCOMP_Count()),
+        ("ccomp", CCOMP_Count()),
+        ("vesr", VerbsExplicitSubject()),
+    ]
+
+    treebank_level_metrics = [
+        ("wfpl", WordFormsPerLemma()),
+        ("vsp", TriPosVariety())
+    ]
+
+    df = pd.DataFrame(index=[i[0] for i in treebanks],
+                      columns=[i[0] for i in sentence_level_metrics] + [i[0] for i in treebank_level_metrics], dtype=float)
+
+    for treebank_name, treebank in treebanks:
+        for metric_name, metric in sentence_level_metrics:
+            result = metric.for_treebank(
+                treebank).mean()
+            df.loc[treebank_name, metric_name] = round(result, 4)
+        for metric_name, metric in treebank_level_metrics:
+            result = metric.compute(treebank)
+            df.loc[treebank_name, metric_name] = round(result, 4)
+
+    # ---------------------
+
+    write_to_latex(
+        df,
+        "paper/tables/results_ours.tex",
+        n_splits=2, transpose=False,
+        caption="Results on in-house parallel treebank. Top values are highlighted for each metric.",
+        ref="tab:results-ours",
+        highlight_topk=1
+    )
+
+
+def main():
+    download_experiment_treebanks()
+    web_treebanks()
+    course_treebanks()
 
 
 if __name__ == '__main__':

@@ -40,7 +40,8 @@ def write_to_latex(
     n_splits: int = 1,
     transpose: bool = False,
     caption: str = "",
-    ref: str = ""
+    ref: str = "",
+    highlight_topk: int = 3
 ):
     main_row_label = "Treebank"
 
@@ -59,9 +60,15 @@ def write_to_latex(
         highest = sort[-1]
         second_highest = sort[-2]
         third_highest = sort[-3]
-        highlights.append((row_labels[highest], col))
-        highlights.append((row_labels[second_highest], col))
-        highlights.append((row_labels[third_highest], col))
+        if highlight_topk == 1:
+            highlights.append((row_labels[highest], col))
+        elif highlight_topk == 2:
+            highlights.append((row_labels[highest], col))
+            highlights.append((row_labels[second_highest], col))
+        elif highlight_topk == 3:
+            highlights.append((row_labels[highest], col))
+            highlights.append((row_labels[second_highest], col))
+            highlights.append((row_labels[third_highest], col))
 
     lines = ["\\begin{table*}", "\\centering"]
 
