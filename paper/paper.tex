@@ -1,0 +1,58 @@
+\pdfoutput=1
+
+\documentclass[11pt]{article}
+
+\usepackage[review]{acl}
+
+\usepackage{times}
+\usepackage{latexsym}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{microtype}
+
+\title{Cross-linguistic complexity analysis using UD treebanks}
+
+\author{Aron Winkler \\
+  University of Tübungen \\
+  \texttt{email@domain}}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+    The aim of this project is to explore the use of UD treebanks in cross-linguistic complexity research. While it is not this paper's objective to make strong theoretical claims on complexity in its own right, it examines complexity measures computed on various UD treebanks across 4 languages. This work focuses on treebanks for English, German, Hungarian, and Chinese, in an attempt to determine whether complexity measures stay consistent within treebanks for the same language, and whether some languages consistently show higher complexity than others.
+    These claims are verified with official UD corpora, as well as with a parallel corpus of 50 sentences for each language mentioned above.
+\end{abstract}
+
+\section{Introduction}
+
+What constitutes linguistic complexity is an elusive multi-faceted inquiry, and quantifying it is equally challenging. Previous approaches have included text-based metrics as well as eye-tracking studies (e.g. \citealp{Lee:2007}), but a general consensus has not been reached, especially when it comes to the notion of "overall complexity" of a language. In the case that an experiment produces numeric values as a proxy for complexity, it is not obvious that results computed on two different languages are comparable.
+
+In this work, the objective is not to attempt to resolve these foundational question about linguistic complexity, but rather to accept that there are certain well documented text-based proxies for computing it - such as lexical, morphological, and syntactic complexity measures - and to explore how the Universal Dependencies framework can be employed to further the subject matter. 
+
+Indeed, the potential of UD-annotated data appears to be largely untapped in linguistic complexity research. A convincing contribution to this field was made by \citealp{Cagri:18}, estimating robustness of complexity values computed on a variety of treebanks, while accounting for additional obstacles such as language-specific annotation conventions that might reduce comparability.
+
+While this project is more restricted in scope and claims, the goal is to showcase the use of UD treebanks in linguistic complexity research along the same lines as \citealp{Cagri:18}. For this purpose, we use a variety of treebanks across four languages and a set of text-based complexity metrics inspired in part by readability research, and in part by complexity research more broadly. These metrics are computed on two datasets, one of which is a collection of official UD treebanks, and the other being a small in-house parallel corpus comprising 50 sentences of each of the 4 target languages.
+
+\section{Dataset}
+
+
+\input{tables/webdata.tex}
+
+Table \ref{tab:webdata} shows the list of UD web treebanks used in this experiment. For the English language, which has many treebanks available to it, we selected UD English-ESL/TLE (\citealp{berzak2016tle}, \citealp{yannakoudakis2011fce}, GitHub\footnote{\url{https://github.com/UniversalDependencies/UD_English-ESL}}), GUM (\citealp{berzak2016tle}, GitHub\footnote{\url{https://github.com/UniversalDependencies/UD_English-GUM}}), and EWT (\citealp{silveira14gold}, GitHub\footnote{\url{https://github.com/UniversalDependencies/UD_English-EWT}}). For German, we opted for GSD (\citealp{mcdonald-etal-2013-universal}, GitHub \footnote{\url{https://github.com/UniversalDependencies/UD_German-GSD}}) and HDT (\citealp{borges-volker-etal-2019-hdt}, \citealp{hennig-kohn-2017-dependency}, \citealp{hdtextra}, \citealp{hdtguide}, GitHub \footnote{\url{https://github.com/UniversalDependencies/UD_German-HDT}}). For Chinese, 
+GSD (GitHub\footnote{\url{https://github.com/UniversalDependencies/UD_Chinese-GSD}}) and PUD (GitHub\footnote{\url{https://github.com/UniversalDependencies/UD_Chinese-PUD}}). For Hungarian, only the Szeged treebank (\citealp{szeged}, Github\footnote{\url{https://github.com/UniversalDependencies/UD_Hungarian-Szeged}}) was available - therefore in order to have at least two treebanks for each language, the sentences annotated in the Szeged treebank were randomly distributed across two new treebanks (hun\_szeged\_1, hun\_szeged\_2).
+
+An additional parallel treebank\footnote{\url{https://github.com/iscl-dtdp/ParallelTreebank-FinalProject}} made by Nino Meisinger, Qin Gu, Lisa Wang, and Aron Winkler as coursework at the University of Tübingen was also employed. Although its limited size of only 50 sentences per language prevents meaningful conclusions from being drawn from measurements computed on it, its parallel nature nevertheless allows interesting observations to be made in reference to the complexity metric values sourced from the official treebanks. 
+
+
+\bibliography{anthology,cited}
+
+\appendix
+
+\section{Example Appendix}
+\label{sec:appendix}
+
+This is an appendix.
+
+\end{document}
