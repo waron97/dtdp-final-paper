@@ -57,8 +57,8 @@ def main():
         ("cmn_pud", cmn_pud)
     ]
 
-    for name, bank in treebanks:
-        print(name, len(bank.sentences))
+    # for name, bank in treebanks:
+    #     print(name, len(bank.sentences))
 
     metrics = [
         ("token count", TokenCount(include_punct=False)),
