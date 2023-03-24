@@ -1,0 +1,32 @@
+\begin{table*}[ht]
+    \centering
+    \begin{tabular}{p{100px}p{150px}cc}
+        \hline
+        \textbf{Metric} & \textbf{Description} & \textbf{Abbreviation} & \textbf{Level} \\
+        \hline
+        Token Count & Token length of sentence & \emph{tc} & sentence \\
+        \hline
+        Type Token Ratio & Simple type token ratio, without preprocessing & \emph{ttr} & sentence \\
+        \hline
+        Parse Tree Depth & Depth of the parse tree obtained from the sentence & \emph{ptd} & sentence \\
+        \hline
+        Length of longest dependency link & Surface distance in tokens between the most distant related elements in a sentence & \emph{lldl} & sentence \\
+        \hline
+        Noun to verb ratio & Number of nouns divided by the number of verbs in a sentence & \emph{n2v} & sentence \\
+        \hline
+        Number of clauses per sentence & Number of clauses per sentence - clauses are identified by the presence of verbs & \emph{cxc} & sentence \\
+        \hline
+        Number of xcomp relations per sentence & Number of xcomp relations per sentence & \emph{xcomp} & sentence \\
+        \hline
+        Number of ccomp relations per sentence & Number of ccomp relations per sentence & \emph{ccomp} & sentence \\
+        \hline
+        Ratio of verbs with explicit subject & Number of verbs in a sentence with explicit \emph{nsubj} or \emph{csubj} relations, divided by the number of verbs & \emph{ves} & sentence \\
+        \hline
+        Word forms per lemma & Number of UD FORM variants for every LEMMA & \emph{wfpl} & treebank \\
+        \hline
+        POS sequence variability & Variability of sequences of three POS tags & \emph{vsp} & treebank \\
+        \hline
+    \end{tabular}
+    \caption{Complexity metrics}
+    \label{tab:metrics}
+\end{table*}
