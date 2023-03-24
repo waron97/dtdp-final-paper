@@ -63,12 +63,12 @@ def main():
         ("cmn_pud", cmn_pud),
     ]
 
-    for name, bank in treebanks:
-        print(name, len(bank.sentences))
+    # for name, bank in treebanks:
+    #     print(name, len(bank.sentences))
 
     sentence_level_metrics = [
-        ("token count", TokenCount(include_punct=False)),
-        ("type token ratio", TypeTokenRatio()),
+        ("tc", TokenCount(include_punct=False)),
+        ("ttr", TypeTokenRatio()),
         ("ptd", TreeDepth()),
         ("lldl", LengthLongestDepLink()),
         ("n2v", NounVerbRatio()),
@@ -96,6 +96,66 @@ def main():
             df.loc[treebank_name, metric_name] = round(result, 4)
 
     print(df)
+
+    # ---------------------
+
+    out_table = ["\\begin{table*}", "\\centering"]
+
+    metric_names = [i[0] for i in sentence_level_metrics] + [i[0]
+                                                             for i in treebank_level_metrics]
+
+    l = int(len(metric_names) / 2)
+
+    n1 = metric_names[:l]
+    n2 = metric_names[l:]
+    s1 = " & ".join([f"\\textbf{{{i}}}" for i in n1])
+    s2 = " & ".join([f"\\textbf{{{i}}}" for i in n2])
+
+    # ---------------------
+    # Tabular 1
+    # ---------------------
+
+    out_table.append(
+        f"\\begin{{tabularx}}{{\\textwidth}}{{X{'c' * len(n1)}}}")
+    out_table.append("\\hline")
+    out_table.append(f"\\textbf{{Treebank}} & {s1} \\\\")
+    out_table.append("\\hline")
+    for name, treebank in treebanks:
+        metric_values = " & ".join([str(df.loc[name, i]) for i in n1])
+        out_table.append(f"{name} & {metric_values} \\\\")
+        out_table.append("\\hline")
+    out_table.append("\\end{tabularx}")
+
+    # ---------------------
+    # Tabular 2
+    # ---------------------
+
+    out_table.append("")
+    out_table.append("\\vspace{0.5cm}")
+    out_table.append("")
+
+    # ---------------------
+
+    out_table.append(
+        f"\\begin{{tabularx}}{{\\textwidth}}{{X{'c' * len(n2)}}}")
+    out_table.append("\\hline")
+    out_table.append(f"\\textbf{{Treebank}} & {s2} \\\\")
+    out_table.append("\\hline")
+    for name, treebank in treebanks:
+        metric_values = " & ".join([str(df.loc[name, i]) for i in n2])
+        out_table.append(f"{name} & {metric_values} \\\\")
+        out_table.append("\\hline")
+    out_table.append("\\end{tabularx}")
+
+    # ---------------------
+
+    out_table.append("\\caption{{Results}}")
+    out_table.append("\\label{{tab:results}}")
+    out_table.append("\\end{table*}")
+
+    with open("paper/tables/results.tex", "w", encoding="utf-8") as f:
+        lines = "\n".join([l.replace("_", "\\_") for l in out_table])
+        f.write(lines)
 
 
 if __name__ == '__main__':
