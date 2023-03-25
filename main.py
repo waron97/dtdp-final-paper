@@ -9,9 +9,13 @@ from src.metrics.VerbsExplicitSubject import VerbsExplicitSubject
 from src.metrics.TypeTokenRatio import TypeTokenRatio
 from src.metrics.WordFormsPerLemma import WordFormsPerLemma
 from src.metrics.TriPosVariety import TriPosVariety
+from src.metrics.VerbsExplicitSubjectTreebank import VerbsExplicitSubject as VESR_T
 from src.util import download_experiment_treebanks, write_to_latex
 from src.constants.treebank_paths import WEB_TREEBANK_PATHS, COURSE_PARALLEL_TREEBANK_PATHS
 import pandas as pd
+import random
+
+random.seed(42)
 
 
 def web_treebanks():
@@ -73,12 +77,13 @@ def web_treebanks():
         ("cxc", ClausesPerSentence()),
         ("xcomp", XCOMP_Count()),
         ("ccomp", CCOMP_Count()),
-        ("vesr", VerbsExplicitSubject()),
+        ("ves", VerbsExplicitSubject()),
     ]
 
     treebank_level_metrics = [
+        ("ves_t", VESR_T()),
         ("wfpl", WordFormsPerLemma()),
-        ("vsp", TriPosVariety())
+        ("vps", TriPosVariety()),
     ]
 
     df = pd.DataFrame(index=[i[0] for i in treebanks],
@@ -115,10 +120,10 @@ def course_treebanks():
         path=COURSE_PARALLEL_TREEBANK_PATHS["mandarin"], lang_code="mandarin", ignore_compound_indexes=True)
 
     treebanks = [
-        ("hun", hun),
         ("en", en),
         ("deu", deu),
-        ("mandarin", mandarin),
+        ("hun", hun),
+        ("cmn", mandarin),
     ]
 
     sentence_level_metrics = [
@@ -130,12 +135,13 @@ def course_treebanks():
         ("cxc", ClausesPerSentence()),
         ("xcomp", XCOMP_Count()),
         ("ccomp", CCOMP_Count()),
-        ("vesr", VerbsExplicitSubject()),
+        ("ves", VerbsExplicitSubject()),
     ]
 
     treebank_level_metrics = [
+        ("ves_t", VESR_T()),
         ("wfpl", WordFormsPerLemma()),
-        ("vsp", TriPosVariety())
+        ("vps", TriPosVariety()),
     ]
 
     df = pd.DataFrame(index=[i[0] for i in treebanks],
